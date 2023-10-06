@@ -1,1 +1,1 @@
-<h1> GreyScaleImageProccessor </h1> 
+<h1> GreyScaleImageProcessor </h1> 
