@@ -1,4 +1,4 @@
-<h1> GreyScaleImageProcessor </h1> 
+<h1> GreyScaleImageProcessor Project </h1> 
 
 Follow those instructions to edit on code
 
