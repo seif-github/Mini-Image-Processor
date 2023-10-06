@@ -1,3 +1,11 @@
+// FCAI – OOP Programming – 2023 - Assignment 1
+// Program Name: ImageProcessor.cpp
+// Last Modification Date: 7/10/2023
+// Author1 and ID and Group: Seif Gamal 20220162
+// Author2 and ID and Group: Samuel Moamen 20220168
+// Author3 and ID and Group: Zeyad Hussein 20220439
+
+
 #include <iostream>
 #include <fstream>
 #include <cstring>
