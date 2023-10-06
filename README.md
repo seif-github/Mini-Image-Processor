@@ -2,7 +2,7 @@
 
 Follow those instructions to edit on code
 
-download git and install it
+Download git and install it
 
 1) Open D:\ directory and rightclick at any empty place then choose "Git Bash Here"
 2) For first time using git type -> git config --global user.name (put name) -> git config --global user.email (put email)
