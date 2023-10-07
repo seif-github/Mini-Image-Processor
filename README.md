@@ -1,6 +1,6 @@
 <h1> GreyScaleImageProcessor Project </h1> 
 
-
+Follow those instructions to edit on the code.
 
 Download git and install it if you didn't.
 
