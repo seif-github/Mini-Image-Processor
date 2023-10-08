@@ -116,34 +116,37 @@ void flip_image(){
 
 /* 5- Darken and Lighten Image------------------------------------------*/
 void darken_and_lighten(){
-  int total_pixels = 0;
-
-  for (int i = 0; i < SIZE; i++) {
-    for (int j = 0; j< SIZE; j++) {
-      total_pixels+=image[i][j];
-    }
-  }
-
-  int avg = total_pixels / (256*256);
-
-  cout<<"Do you want to (d)arken or (l)ighten? ";
-  char c;
-  cin>>c;
-
-  if(c == 'd'){
+    // Initialize variable will contain the number of total pixels in the image
+    int n_total_pixels = 0;
     for (int i = 0; i < SIZE; i++) {
-      for (int j = 0; j< SIZE; j++) {
-        copy_image[i][j] = image[i][j]-image[i][j]/2;
-      }
+        for (int j = 0; j < SIZE; j++) {
+          n_total_pixels += input_image_matrix[i][j];
+        }
     }
-  }
-  else{
-    for (int i = 0; i < SIZE; i++) {
-      for (int j = 0; j< SIZE; j++) {
-            copy_image[i][j] = image[i][j]+(avg-(image[i][j]/2)) >= 255 ? 255 : image[i][j]+(avg-(image[i][j]/2));
-      }
+    // Calculating the average of pixels by using average rule
+    int avg = n_total_pixels / (256*256);
+    //Declare a character to choose
+    cout<<"Do you want to (d)arken or (l)ighten? ";
+    char c;
+    cin>>c;
+
+    if(c == 'd'){
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j< SIZE; j++) {
+                // Adding 50% of the pixel value
+                copy_image[i][j] = image[i][j]-image[i][j]/2;
+            }
+        }
     }
-  }
+    else{
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j< SIZE; j++) {
+                // Decreasing 50% of the pixel value by adding the value of the average minus the value of 50% of the pixel
+                // taking care of it is white should be still white
+                copy_image[i][j] = image[i][j]+(avg-(image[i][j]/2)) >= 255 ? 255 : image[i][j]+(avg-(image[i][j]/2));
+            }
+        }
+    }
 }
 
 /* 6- Rotate Image------------------------------------------------------*/
