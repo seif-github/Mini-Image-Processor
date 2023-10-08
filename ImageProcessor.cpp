@@ -134,7 +134,7 @@ void darken_and_lighten(){
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j< SIZE; j++) {
                 // Adding 50% of the pixel value
-                copy_image[i][j] = image[i][j]-image[i][j]/2;
+                output_image_matrix[i][j] = input_image_matrix[i][j]-input_image_matrix[i][j]/2;
             }
         }
     }
@@ -143,7 +143,7 @@ void darken_and_lighten(){
             for (int j = 0; j< SIZE; j++) {
                 // Decreasing 50% of the pixel value by adding the value of the average minus the value of 50% of the pixel
                 // taking care of it is white should be still white
-                copy_image[i][j] = image[i][j]+(avg-(image[i][j]/2)) >= 255 ? 255 : image[i][j]+(avg-(image[i][j]/2));
+                output_image_matrix[i][j] = input_image_matrix[i][j]+(avg-(input_image_matrix[i][j]/2)) >= 255 ? 255 : input_image_matrix[i][j]+(avg-(input_image_matrix[i][j]/2));
             }
         }
     }
