@@ -1,6 +1,6 @@
 // FCAI – OOP Programming – 2023 - Assignment 1
 // Program Name: ImageProcessor.cpp
-// Last Modification Date: 9/10/2023
+// Last Modification Date: 9 Oct 2023
 // Author1 and ID and Group: Seif Gamal Abdelmonem 20220162
 // Author2 and ID and Group: Samuel Moamen Samy 20220168
 // Author3 and ID and Group: Zeyad Hussein Adel 20220439
@@ -93,7 +93,7 @@ void merge_image(){
     char input_image_name_2 [100];
 
     // Get gray scale image file name
-    cout << " Please enter name of image file to merge with: " ;
+    cout << "Please enter name of image file to merge with: " ;
     cin >> input_image_name_2;
     // Add to it .bmp extension and load image to the image matrix
     strcat (input_image_name_2, ".bmp");
@@ -236,7 +236,7 @@ int main(){
         else if (n_filters == 6){
             rotate_image();
         }
-        else{
+        else{ // Exit
             return 0;
         }
 
