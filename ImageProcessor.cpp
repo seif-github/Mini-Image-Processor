@@ -79,7 +79,11 @@ void black_and_white() {
 
 /* 2- Invert Filter-----------------------------------------------------*/
 void invert_image(){
-
+    for(int i=0; i<SIZE;i++){
+        for(int j=0; j<SIZE; j++){
+            image[i][j] = 255 - image[i][j];
+        }
+    }
 }
 
 /* 3- Merge Filter------------------------------------------------------*/
