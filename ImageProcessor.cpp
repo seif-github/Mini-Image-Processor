@@ -84,7 +84,7 @@ void invert_image(){
 
 /* 3- Merge Filter------------------------------------------------------*/
 void merge_image(){
-cout<<" hello world " ;
+    //nothing here for now
 }
 
 /* 4- Flip Image--------------------------------------------------------*/
