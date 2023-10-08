@@ -1,9 +1,9 @@
 // FCAI – OOP Programming – 2023 - Assignment 1
 // Program Name: ImageProcessor.cpp
-// Last Modification Date: 7/10/2023
-// Author1 and ID and Group: Seif Gamal 20220162
-// Author2 and ID and Group: Samuel Moamen 20220168
-// Author3 and ID and Group: Zeyad Hussein 20220439
+// Last Modification Date: 9/10/2023
+// Author1 and ID and Group: Seif Gamal Abdelmonem 20220162
+// Author2 and ID and Group: Samuel Moamen Samy 20220168
+// Author3 and ID and Group: Zeyad Hussein Adel 20220439
 
 
 #include <iostream>
@@ -88,14 +88,17 @@ void invert_image(){
 
 /* 3- Merge Filter------------------------------------------------------*/
 void merge_image(){
+    //Declare a matrix and array of characters for the second image
     unsigned char input_image_matrix_2 [SIZE][SIZE];
     char input_image_name_2 [100];
 
     // Get gray scale image file name
     cout << " Please enter name of image file to merge with: " ;
     cin >> input_image_name_2;
+    // Add to it .bmp extension and load image to the image matrix
     strcat (input_image_name_2, ".bmp");
     readGSBMP(input_image_name_2, input_image_matrix_2);
+
     for(int i = 0 ; i < SIZE; i++){
         for (int j = 0 ; j < SIZE; j++ ){
         //Make every pixel in output matrix equals to the average of two input matrices.
@@ -165,9 +168,11 @@ void darken_and_lighten(){
 
 /* 6- Rotate Image------------------------------------------------------*/
 void rotate_image(){
+    // Declare an integer to choose
     cout<< "Rotate (90), (180), (270) or (360) degrees? ";
     int degree;
     cin>>degree;
+    // Change place of every pixel in its position in the output matrix
     if (degree==90){
         for(int i=0; i<SIZE;i++){
             for(int j=0; j<SIZE; j++){
