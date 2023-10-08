@@ -81,7 +81,7 @@ void black_and_white() {
 void invert_image(){
     for(int i=0; i<SIZE;i++){
         for(int j=0; j<SIZE; j++){
-            image[i][j] = 255 - image[i][j];
+            output_image_matrix[i][j] = 255 - input_image_matrix[i][j];
         }
     }
 }
