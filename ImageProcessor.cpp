@@ -165,7 +165,38 @@ void darken_and_lighten(){
 
 /* 6- Rotate Image------------------------------------------------------*/
 void rotate_image(){
+    cout<< "Rotate (90), (180), (270) or (360) degrees? ";
+    int degree;
+    cin>>degree;
+    if (degree==90){
+        for(int i=0; i<SIZE;i++){
+            for(int j=0; j<SIZE; j++){
+                output_image_matrix[i][j]=input_image_matrix[255-j][i];
+            }
+        }
+    }
+    else if(degree==180){
+        for(int i=0; i<SIZE;i++){
+            for(int j=0; j<SIZE; j++){
+                output_image_matrix[i][j]=input_image_matrix[255-i][j];
+            }
+        }
+    }
+    else if (degree==270){
+        for(int i=0; i<SIZE;i++){
+            for(int j=0; j<SIZE; j++){
+                output_image_matrix[i][j]=input_image_matrix[j][255-i];
+            }
+        }
+    }
+    else{
+        for(int i=0; i<SIZE;i++){
+            for(int j=0; j<SIZE; j++){
+                output_image_matrix[i][j]=input_image_matrix[i][j];
+            }
+        }
 
+    }
 }
 
 /*======================================================================*/
