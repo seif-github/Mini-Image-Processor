@@ -88,8 +88,22 @@ void invert_image(){
 
 /* 3- Merge Filter------------------------------------------------------*/
 void merge_image(){
-    //nothing here for now
+    unsigned char input_image_matrix_2 [SIZE][SIZE];
+    char input_image_name_2 [100];
+
+    // Get gray scale image file name
+    cout << " Please enter name of image file to merge with: " ;
+    cin >> input_image_name_2;
+    strcat (input_image_name_2, ".bmp");
+    readGSBMP(input_image_name_2, input_image_matrix_2);
+    for(int i = 0 ; i < SIZE; i++){
+        for (int j = 0 ; j < SIZE; j++ ){
+        //Make every pixel in output matrix equals to the average of two input matrices.
+            output_image_matrix[i][j] = (input_image_matrix[i][j] + input_image_matrix_2[i][j])/2 ;
+        }
+    }
 }
+
 
 /* 4- Flip Image--------------------------------------------------------*/
 void flip_image(){
