@@ -1,9 +1,9 @@
 // FCAI – OOP Programming – 2023 - Assignment 1
 // Program Name: ImageProcessor.cpp
 // Last Modification Date: 9 Oct 2023
-// Author1 and ID and Group: Seif Gamal Abdelmonem 20220162
-// Author2 and ID and Group: Samuel Moamen Samy 20220168
-// Author3 and ID and Group: Zeyad Hussein Adel 20220439
+// Author1 and ID and Email: Seif Gamal Abdelmonem | 20220162 | sseif9709@gmail.com
+// Author2 and ID and Email: Samuel Moamen Samy | 20220168 | sasamelo99@gmail.com
+// Author3 and ID and Email: Zeyad Hussein Adel | 20220439 | zeyad.hussein.404@gmail.com
 
 
 #include <iostream>
@@ -63,16 +63,16 @@ void black_and_white() {
     // Making each pixel either black or white depends on average
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-          if(input_image_matrix[i][j] > avg)
-            input_image_matrix[i][j] = 255;
+          if(input_image_matrix [i][j] > avg)
+            input_image_matrix [i][j] = 255;
           else
-            input_image_matrix[i][j] = 0;
+            input_image_matrix [i][j] = 0;
         }
     }
     // put the result in the output_image_matrix
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-            output_image_matrix[i][j] = input_image_matrix[i][j];
+            output_image_matrix [i][j] = input_image_matrix [i][j];
         }
     }
 }
@@ -81,7 +81,7 @@ void black_and_white() {
 void invert_image(){
     for(int i=0; i<SIZE;i++){
         for(int j=0; j<SIZE; j++){
-            output_image_matrix[i][j] = 255 - input_image_matrix[i][j];
+            output_image_matrix [i][j] = 255 - input_image_matrix [i][j];
         }
     }
 }
@@ -97,12 +97,12 @@ void merge_image(){
     cin >> input_image_name_2;
     // Add to it .bmp extension and load image to the image matrix
     strcat (input_image_name_2, ".bmp");
-    readGSBMP(input_image_name_2, input_image_matrix_2);
+    readGSBMP (input_image_name_2, input_image_matrix_2);
 
     for(int i = 0 ; i < SIZE; i++){
         for (int j = 0 ; j < SIZE; j++ ){
         //Make every pixel in output matrix equals to the average of two input matrices.
-            output_image_matrix[i][j] = (input_image_matrix[i][j] + input_image_matrix_2[i][j])/2 ;
+            output_image_matrix [i][j] = (input_image_matrix [i][j] + input_image_matrix_2 [i][j]) / 2 ;
         }
     }
 }
@@ -118,14 +118,14 @@ void flip_image(){
     if(hv == 'h'){
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-            output_image_matrix[i][j] = input_image_matrix[SIZE - i - 1][j];
+            output_image_matrix [i][j] = input_image_matrix [SIZE - i - 1][j];
             }
         }
     }
     else{
         for (int i = 0; i < SIZE; i++) {
           for (int j = 0; j < SIZE; j++) {
-            output_image_matrix[i][j] = input_image_matrix[i][SIZE - j - 1];
+            output_image_matrix [i][j] = input_image_matrix [i][SIZE - j - 1];
           }
         }
     }
@@ -137,30 +137,30 @@ void darken_and_lighten(){
     int n_total_pixels = 0;
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-          n_total_pixels += input_image_matrix[i][j];
+          n_total_pixels += input_image_matrix [i][j];
         }
     }
     // Calculating the average of pixels by using average rule
     int avg = n_total_pixels / (256*256);
     //Declare a character to choose
-    cout<<"Do you want to (d)arken or (l)ighten? ";
+    cout << "Do you want to (d)arken or (l)ighten? ";
     char c;
-    cin>>c;
+    cin >> c;
 
     if(c == 'd'){
         for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j< SIZE; j++) {
+            for (int j = 0; j < SIZE; j++) {
                 // Adding 50% of the pixel value
-                output_image_matrix[i][j] = input_image_matrix[i][j]-input_image_matrix[i][j]/2;
+                output_image_matrix [i][j] = input_image_matrix [i][j] - input_image_matrix [i][j] / 2;
             }
         }
     }
     else{
         for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j< SIZE; j++) {
+            for (int j = 0; j < SIZE; j++) {
                 // Decreasing 50% of the pixel value by adding the value of the average minus the value of 50% of the pixel
                 // taking care of it is white should be still white
-                output_image_matrix[i][j] = input_image_matrix[i][j]+(avg-(input_image_matrix[i][j]/2)) >= 255 ? 255 : input_image_matrix[i][j]+(avg-(input_image_matrix[i][j]/2));
+                output_image_matrix [i][j] = input_image_matrix [i][j] + (avg - (input_image_matrix [i][j] / 2)) >= 255 ? 255 : input_image_matrix [i][j] + (avg - (input_image_matrix [i][j] / 2));
             }
         }
     }
@@ -169,38 +169,37 @@ void darken_and_lighten(){
 /* 6- Rotate Image------------------------------------------------------*/
 void rotate_image(){
     // Declare an integer to choose
-    cout<< "Rotate (90), (180), (270) or (360) degrees? ";
+    cout << "Rotate (90), (180), (270) or (360) degrees? ";
     int degree;
-    cin>>degree;
+    cin >> degree;
     // Change place of every pixel in its position in the output matrix
-    if (degree==90){
-        for(int i=0; i<SIZE;i++){
-            for(int j=0; j<SIZE; j++){
-                output_image_matrix[i][j]=input_image_matrix[255-j][i];
+    if (degree == 90){
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                output_image_matrix [i][j] = input_image_matrix [255-j][i];
             }
         }
     }
-    else if(degree==180){
-        for(int i=0; i<SIZE;i++){
-            for(int j=0; j<SIZE; j++){
-                output_image_matrix[i][j]=input_image_matrix[255-i][j];
+    else if(degree == 180){
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                output_image_matrix [i][j] = input_image_matrix [255-i][j];
             }
         }
     }
-    else if (degree==270){
-        for(int i=0; i<SIZE;i++){
-            for(int j=0; j<SIZE; j++){
-                output_image_matrix[i][j]=input_image_matrix[j][255-i];
+    else if (degree == 270){
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                output_image_matrix [i][j] = input_image_matrix [j][255-i];
             }
         }
     }
     else{
-        for(int i=0; i<SIZE;i++){
-            for(int j=0; j<SIZE; j++){
-                output_image_matrix[i][j]=input_image_matrix[i][j];
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                output_image_matrix [i][j] = input_image_matrix [i][j];
             }
         }
-
     }
 }
 
@@ -209,7 +208,7 @@ void rotate_image(){
 
 
 int main(){
-    int n_filters=1;
+    int n_filters = 1;
     while (n_filters){
         cout << "Ahlan ya user ya habibi" << endl;
         load_image();
