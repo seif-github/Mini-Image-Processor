@@ -19,8 +19,6 @@ unsigned char input_image_matrix [SIZE][SIZE];
 unsigned char output_image_matrix [SIZE][SIZE];
 
 
-
-
 /*====================Load and save image functions====================*/
 
 void load_image () {
@@ -39,7 +37,7 @@ void save_image () {
    char output_image_name [100];
 
    // Get gray scale image target file name
-   cout << "Please enter output image name: ";
+   cout << "Please enter target file name: ";
    cin >> output_image_name;
 
    // Add to it .bmp extension and load image
@@ -208,37 +206,103 @@ void rotate_image(){
 
 
 int main(){
-    int n_filters = 1;
-    while (n_filters){
-        cout << "Ahlan ya user ya habibi" << endl;
-        load_image();
+    // Declare an integer to check how many times user applies filter on the same image
+    int n_attempts = 0;
+    // Declare a character to choose
+    char n_filters = (int)49;
+    cout << "Ahlan ya user ya habibi" << endl;
+    load_image();
+    while ((int)n_filters-48){
         cout << "Please select a filter to apply or 0 to exit: " << endl;
-        cout << " 1- Black & White Filter\n 2- Invert Filter\n 3- Merge Filter\n 4- Flip Image\n 5- Darken and Lighten Image\n 6- Rotate Image\n 0- Exit" << endl;
+        cout << " 1- Black & White Filter\n 2- Invert Filter\n 3- Merge Filter\n 4- Flip Image\n 5- Darken and Lighten Image\n 6- Rotate Image\n s- Save the image to a file\n 0- Exit" << endl;
         //User chooses a number from menu till he chooses 0-Exit
         cin >> n_filters;
 
-        if (n_filters == 1){
+        if (n_filters == '1'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
             black_and_white();
         }
-        else if (n_filters == 2){
+        else if (n_filters == '2'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
             invert_image();
         }
-        else if (n_filters == 3){
+        else if (n_filters == '3'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
             merge_image();
         }
-        else if (n_filters == 4){
+        else if (n_filters == '4'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
             flip_image();
         }
-        else if (n_filters == 5){
+        else if (n_filters == '5'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
             darken_and_lighten();
         }
-        else if (n_filters == 6){
+        else if (n_filters == '6'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
             rotate_image();
+        }
+        else if(n_filters == 's'){
+            save_image();
         }
         else{ // Exit
             return 0;
         }
+        // Counting applying attempts
+        n_attempts++;
 
-        save_image();
     }
 }
