@@ -200,6 +200,73 @@ void rotate_image(){
         }
     }
 }
+/* 7- Detect Image Edges------------------------------------------------*/
+void detect_edges(){
+
+}
+/* 8- Enlarge Image-----------------------------------------------------*/
+void enlarge_image(){
+    unsigned char shift_matrix [SIZE][SIZE];
+
+    cout<<"Which quarter to enlarge 1, 2, 3 or 4? ";
+    int quarter;
+    cin>>quarter;
+    if(quarter == 1){
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                output_image_matrix[i][j] = input_image_matrix[i/2][j/2];
+            }
+        }
+    }
+    else if (quarter == 2){
+         for(int i =0; i < SIZE;i++){
+            for(int j = 128; j < SIZE; j++){
+                shift_matrix[i][j-128] = input_image_matrix[i][j];
+
+            }
+        }
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                output_image_matrix[i][j] = shift_matrix[i/2][j/2];
+            }
+        }
+
+
+    }
+    else if (quarter == 3){
+         for(int i = 128; i < SIZE;i++){
+            for(int j = 0; j < 128; j++){
+                    shift_matrix[i-128][j] = input_image_matrix[i][j];
+
+            }
+        }
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                output_image_matrix[i][j] = shift_matrix[i/2][j/2];
+            }
+        }
+
+
+}
+
+
+    else{
+         for(int i = 128; i < SIZE;i++){
+            for(int j = 128; j < SIZE; j++){
+                shift_matrix[i-128][j-128] = input_image_matrix[i][j];
+
+            }
+        }
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                output_image_matrix[i][j] = shift_matrix[i/2][j/2];
+            }
+        }
+    }
+
+}
+
+
 
 /*======================================================================*/
 
@@ -214,7 +281,7 @@ int main(){
     load_image();
     while ((int)n_filters-48){
         cout << "Please select a filter to apply or 0 to exit: " << endl;
-        cout << " 1- Black & White Filter\n 2- Invert Filter\n 3- Merge Filter\n 4- Flip Image\n 5- Darken and Lighten Image\n 6- Rotate Image\n s- Save the image to a file\n 0- Exit" << endl;
+        cout << " 1- Black & White Filter\n 2- Invert Filter\n 3- Merge Filter\n 4- Flip Image\n 5- Darken and Lighten Image\n 6- Rotate Image\n 7- Detect Image Edges\n 8- Enlarge Image\n 9- Shrink Image\n a- Mirror 1/2 Image\n b- Shuffle Image\n c- Blur Image\n d- Crop Image\n e- Skew Image Right\n f- Skew Image Up\n s- Save the image to a file\n 0- Exit" << endl;
         //User chooses a number from menu till he chooses 0-Exit
         cin >> n_filters;
 
@@ -293,7 +360,57 @@ int main(){
                     }
                 }
             }
+
             rotate_image();
+        }
+        else if(n_filters == '7'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
+            detect_edges();
+
+        }
+        else if(n_filters == '8'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
+            enlarge_image();
+
+        }
+        else if(n_filters == '9'){
+
+        }
+        else if(n_filters == 'a'){
+
+        }
+        else if(n_filters == 'b'){
+
+        }
+        else if(n_filters == 'c'){
+
+        }
+        else if(n_filters == 'd'){
+
+        }
+        else if(n_filters == 'e'){
+
+        }
+        else if(n_filters == 'f'){
+
         }
         else if(n_filters == 's'){
             save_image();
