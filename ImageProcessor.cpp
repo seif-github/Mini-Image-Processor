@@ -265,6 +265,47 @@ void enlarge_image(){
     }
 
 }
+/* 9- Shrink Image------------------------------------------------------*/
+void shrink_image(){
+    cout<<"Shrink to (1/2), (1/3) or (1/4)? ";
+
+    string value ;
+    cin>> value ;
+
+    for(int i = 0; i < SIZE;i++){
+        for(int j = 0; j < SIZE; j++){
+            output_image_matrix[i][j] = 255;
+        }
+    }
+
+    if(value == "1/2"){
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+            output_image_matrix[i/2][j/2] = input_image_matrix[i][j] ;
+
+            }
+        }
+    }
+    else if(value== "1/3") {
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                output_image_matrix[i/3][j/3] = input_image_matrix[i][j] ;
+
+            }
+        }
+    }
+    else{
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                output_image_matrix[i/4][j/4] = input_image_matrix[i][j] ;
+
+            }
+        }
+
+    }
+
+}
+
 
 
 
@@ -392,6 +433,17 @@ int main(){
 
         }
         else if(n_filters == '9'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
+            shrink_image();
 
         }
         else if(n_filters == 'a'){
