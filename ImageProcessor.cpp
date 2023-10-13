@@ -200,26 +200,32 @@ void rotate_image(){
         }
     }
 }
+
 /* 7- Detect Image Edges------------------------------------------------*/
 void detect_edges(){
 
 }
+
 /* 8- Enlarge Image-----------------------------------------------------*/
 void enlarge_image(){
+    // Declare new matrix to shift the image
     unsigned char shift_matrix [SIZE][SIZE];
-
+    // Declare an integer to choose
     cout<<"Which quarter to enlarge 1, 2, 3 or 4? ";
     int quarter;
     cin>>quarter;
     if(quarter == 1){
+        // Enlarging image by repeating pixel four times
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
                 output_image_matrix[i][j] = input_image_matrix[i/2][j/2];
             }
         }
     }
+
     else if (quarter == 2){
-         for(int i =0; i < SIZE;i++){
+        // Shifting the quarter to be instead of first quarter
+        for(int i =0; i < SIZE;i++){
             for(int j = 128; j < SIZE; j++){
                 shift_matrix[i][j-128] = input_image_matrix[i][j];
 
@@ -233,6 +239,7 @@ void enlarge_image(){
 
 
     }
+
     else if (quarter == 3){
          for(int i = 128; i < SIZE;i++){
             for(int j = 0; j < 128; j++){
@@ -245,9 +252,7 @@ void enlarge_image(){
                 output_image_matrix[i][j] = shift_matrix[i/2][j/2];
             }
         }
-
-
-}
+    }
 
 
     else{
@@ -263,15 +268,14 @@ void enlarge_image(){
             }
         }
     }
-
 }
 /* 9- Shrink Image------------------------------------------------------*/
 void shrink_image(){
+    // Declare string to choose
     cout<<"Shrink to (1/2), (1/3) or (1/4)? ";
-
     string value ;
     cin>> value ;
-
+    // Make the whole image white
     for(int i = 0; i < SIZE;i++){
         for(int j = 0; j < SIZE; j++){
             output_image_matrix[i][j] = 255;
@@ -279,14 +283,16 @@ void shrink_image(){
     }
 
     if(value == "1/2"){
+        // Shrink image by taking every 4 pixels as one
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-            output_image_matrix[i/2][j/2] = input_image_matrix[i][j] ;
+                output_image_matrix[i/2][j/2] = input_image_matrix[i][j] ;
 
             }
         }
     }
     else if(value== "1/3") {
+        // Shrink image by taking every 9 pixels as one
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
                 output_image_matrix[i/3][j/3] = input_image_matrix[i][j] ;
@@ -295,19 +301,46 @@ void shrink_image(){
         }
     }
     else{
+        // Shrink image by taking every 16 pixels as one
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
                 output_image_matrix[i/4][j/4] = input_image_matrix[i][j] ;
 
             }
         }
-
     }
+
+}
+/* a- Mirror Image------------------------------------------------------*/
+void mirror_image(){
+
+}
+/* b- Shuffle Image-----------------------------------------------------*/
+void shuffle_image(){
+
+}
+
+/* c- Blur Image--------------------------------------------------------*/
+void blur_image(){
 
 }
 
 
+/* d- Crop Image--------------------------------------------------------*/
+void crop_image(){
 
+}
+
+/* e- Skew Image Right--------------------------------------------------*/
+void skew_right(){
+
+}
+
+
+/* f- Skew Image Up-----------------------------------------------------*/
+void skew_up(){
+
+}
 
 /*======================================================================*/
 
