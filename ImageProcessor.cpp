@@ -229,7 +229,7 @@ void detect_edges(){
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             // Compare the difference between center pixel and its surroundings. If there's huge difference, it will make an edge
-            output_image_matrix[i][j] = (input_image_matrix[i+1][j+1] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i][j+1] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i+1][j] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i-1][j] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i][j-1] - input_image_matrix[i][j]) == 255 ? 0 : 255;
+            output_image_matrix[i][j] =  (input_image_matrix[i-1][j-1] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i+1][j+1] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i][j+1] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i+1][j] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i-1][j] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i][j-1] - input_image_matrix[i][j]) == 255 ? 0 : 255;
 
         }
     }
