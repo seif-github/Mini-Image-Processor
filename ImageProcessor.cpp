@@ -61,10 +61,13 @@ void black_and_white() {
     // Making each pixel either black or white depends on average
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-          if(input_image_matrix [i][j] > avg)
+          if(input_image_matrix [i][j] > avg){
             input_image_matrix [i][j] = 255;
-          else
+          }
+          else{
             input_image_matrix [i][j] = 0;
+          }
+
         }
     }
     // put the result in the output_image_matrix
@@ -203,6 +206,33 @@ void rotate_image(){
 
 /* 7- Detect Image Edges------------------------------------------------*/
 void detect_edges(){
+// Black and White filter
+    // Initialize variable will contain the number of total pixels in the image
+    int n_total_pixels = 0;
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+          n_total_pixels += input_image_matrix[i][j];
+        }
+    }
+    // Calculating the average of pixels by using average rule
+    int avg = n_total_pixels / (256*256);
+    // Making each pixel either black or white depends on average
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+          if(input_image_matrix [i][j] > avg)
+            input_image_matrix [i][j] = 255;
+          else
+            input_image_matrix [i][j] = 0;
+        }
+    }
+// Detect edges part
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            // Compare the difference between center pixel and its surroundings. If there's huge difference, it will make an edge
+            output_image_matrix[i][j] = (input_image_matrix[i+1][j+1] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i][j+1] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i+1][j] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i-1][j] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i][j-1] - input_image_matrix[i][j]) == 255 ? 0 : 255;
+
+        }
+    }
 
 }
 
@@ -214,6 +244,7 @@ void enlarge_image(){
     cout<<"Which quarter to enlarge 1, 2, 3 or 4? ";
     int quarter;
     cin>>quarter;
+
     if(quarter == 1){
         // Enlarging image by repeating pixel four times
         for(int i = 0; i < SIZE;i++){
@@ -322,6 +353,18 @@ void shuffle_image(){
 
 /* c- Blur Image--------------------------------------------------------*/
 void blur_image(){
+    // Declare an integer to calculate the average of a pixel and the surrounding 24 pixel and make it one pixel
+    int avg = 0;
+    for(int i = 2; i < 254;i++){
+        for(int j = 2; j < 254; j++){
+            avg += input_image_matrix[i][j];
+            for(int k = 1; k < 4; k++){
+                avg += input_image_matrix[i-k][j-k] + input_image_matrix[i-k][j] + input_image_matrix[i-k][j+k] + input_image_matrix[i][j-k]+ input_image_matrix[i][j+k] + input_image_matrix[i+k][j-k] + input_image_matrix[i+k][j] + input_image_matrix[i+k][j+k];
+            }
+            output_image_matrix[i][j] = avg/25;
+            avg = 0;
+        }
+    }
 
 }
 
@@ -339,6 +382,7 @@ void skew_right(){
 
 /* f- Skew Image Up-----------------------------------------------------*/
 void skew_up(){
+
 
 }
 
