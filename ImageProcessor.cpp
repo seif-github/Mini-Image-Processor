@@ -371,6 +371,7 @@ int main(){
             }
 
             black_and_white();
+
         }
         else if (n_filters == '2'){
             // Get back output data to the input again if we will apply filter on the output
@@ -384,6 +385,7 @@ int main(){
             }
 
             invert_image();
+
         }
         else if (n_filters == '3'){
             // Get back output data to the input again if we will apply filter on the output
@@ -397,6 +399,7 @@ int main(){
             }
 
             merge_image();
+
         }
         else if (n_filters == '4'){
             // Get back output data to the input again if we will apply filter on the output
@@ -410,6 +413,7 @@ int main(){
             }
 
             flip_image();
+
         }
         else if (n_filters == '5'){
             // Get back output data to the input again if we will apply filter on the output
@@ -423,6 +427,7 @@ int main(){
             }
 
             darken_and_lighten();
+
         }
         else if (n_filters == '6'){
             // Get back output data to the input again if we will apply filter on the output
@@ -436,6 +441,7 @@ int main(){
             }
 
             rotate_image();
+
         }
         else if(n_filters == '7'){
             // Get back output data to the input again if we will apply filter on the output
@@ -480,21 +486,87 @@ int main(){
 
         }
         else if(n_filters == 'a'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
+            mirror_image();
 
         }
         else if(n_filters == 'b'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
+            shuffle_image();
 
         }
         else if(n_filters == 'c'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
+            blur_image();
 
         }
         else if(n_filters == 'd'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
+            crop_image();
 
         }
         else if(n_filters == 'e'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
+            skew_right();
 
         }
         else if(n_filters == 'f'){
+            // Get back output data to the input again if we will apply filter on the output
+            if(n_attempts > 0){
+                for (int i = 0; i < SIZE; i++){
+                    for (int j = 0; j < SIZE; j++){
+                        input_image_matrix[i][j] = output_image_matrix[i][j];
+                        output_image_matrix[i][j] = 0;
+                    }
+                }
+            }
+
+            skew_up();
 
         }
         else if(n_filters == 's'){
