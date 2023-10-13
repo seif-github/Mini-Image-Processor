@@ -619,7 +619,7 @@ int main(){
         else{ // Exit
             return 0;
         }
-        // Counting applying attempts
+        // Counting applying attempts to check it is the first attempt or it is not so get back output matrix to input matrix
         n_attempts++;
 
     }
