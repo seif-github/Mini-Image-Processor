@@ -113,17 +113,17 @@ void merge_image(){
 void flip_image(){
     //Declare a character to choose
     cout << "Flip (h)orizontally or (v)ertically ? ";
-    char hv;
-    cin >> hv;
+    char c;
+    cin >> c;
     //On every pixel change its position and put it in the output image
-    if(hv == 'h'){
+    if(c == 'h'){
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
             output_image_matrix [i][j] = input_image_matrix [SIZE - i - 1][j];
             }
         }
     }
-    else{
+    else{ // c == 'v'
         for (int i = 0; i < SIZE; i++) {
           for (int j = 0; j < SIZE; j++) {
             output_image_matrix [i][j] = input_image_matrix [i][SIZE - j - 1];
@@ -147,7 +147,6 @@ void darken_and_lighten(){
     cout << "Do you want to (d)arken or (l)ighten? ";
     char c;
     cin >> c;
-
     if(c == 'd'){
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -156,7 +155,7 @@ void darken_and_lighten(){
             }
         }
     }
-    else{
+    else{ // c == 'l'
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
                 // Decreasing 50% of the pixel value by adding the value of the average minus the value of 50% of the pixel
@@ -195,7 +194,7 @@ void rotate_image(){
             }
         }
     }
-    else{
+    else{ // degree == 360
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
                 output_image_matrix [i][j] = input_image_matrix [i][j];
@@ -253,7 +252,6 @@ void enlarge_image(){
             }
         }
     }
-
     else if (quarter == 2){
         // Shifting the quarter to be instead of first quarter
         for(int i =0; i < SIZE;i++){
@@ -270,7 +268,6 @@ void enlarge_image(){
 
 
     }
-
     else if (quarter == 3){
          for(int i = 128; i < SIZE;i++){
             for(int j = 0; j < 128; j++){
@@ -284,9 +281,7 @@ void enlarge_image(){
             }
         }
     }
-
-
-    else{
+    else{ // quarter == 4
          for(int i = 128; i < SIZE;i++){
             for(int j = 128; j < SIZE; j++){
                 shift_matrix[i-128][j-128] = input_image_matrix[i][j];
