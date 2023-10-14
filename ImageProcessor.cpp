@@ -322,7 +322,7 @@ void shrink_image(){
             }
         }
     }
-    else if(value== "1/3") {
+    else if(value == "1/3") {
         // Shrink image by taking every 9 pixels as one
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
@@ -331,7 +331,7 @@ void shrink_image(){
             }
         }
     }
-    else{
+    else{ // value == "1/4"
         // Shrink image by taking every 16 pixels as one
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
@@ -344,6 +344,46 @@ void shrink_image(){
 }
 /* a- Mirror Image------------------------------------------------------*/
 void mirror_image(){
+    // Declare character to choose
+    cout << "Mirror (l)eft, (r)ight, (u)pper, (d)own side? ";
+    char c;
+    cin >> c;
+    // Make the the side chosen equal the opposite by put its pixel in the opposite
+    if(c == 'l'){
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < 128; j++){
+                input_image_matrix [i][255 - j] = input_image_matrix [i][j];
+            }
+        }
+    }
+    else if (c == 'r'){
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                input_image_matrix [i][j] = input_image_matrix [i][255 - j];
+            }
+        }
+    }
+    else if (c == 'u'){
+        for(int i = 0; i < 128;i++){
+            for(int j = 0; j < SIZE; j++){
+                input_image_matrix [255 - i][j] = input_image_matrix [i][j];
+            }
+        }
+    }
+    else { // c == 'd'
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                input_image_matrix [i][j] = input_image_matrix [255 - i][j];
+
+            }
+        }
+    }
+    for(int i = 0; i < SIZE;i++){
+        for(int j = 0; j < SIZE; j++){
+            output_image_matrix [i][j] = input_image_matrix [i][j] ;
+        }
+    }
+
 
 }
 /* b- Shuffle Image-----------------------------------------------------*/
