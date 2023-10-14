@@ -206,7 +206,7 @@ void rotate_image(){
 
 /* 7- Detect Image Edges------------------------------------------------*/
 void detect_edges(){
-// Black and White filter
+// Black and White filter code
     // Initialize variable will contain the number of total pixels in the image
     int n_total_pixels = 0;
     for (int i = 0; i < SIZE; i++) {
@@ -225,7 +225,7 @@ void detect_edges(){
             input_image_matrix [i][j] = 0;
         }
     }
-// Detect edges part
+// Detect edges part code
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
             // Compare the difference between center pixel and its surroundings. If there's huge difference, it will make an edge
@@ -378,6 +378,7 @@ void mirror_image(){
             }
         }
     }
+    // Put final result in the output matrix
     for(int i = 0; i < SIZE;i++){
         for(int j = 0; j < SIZE; j++){
             output_image_matrix [i][j] = input_image_matrix [i][j] ;
