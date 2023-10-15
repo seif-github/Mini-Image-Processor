@@ -384,6 +384,103 @@ void mirror_image(){
 }
 /* b- Shuffle Image-----------------------------------------------------*/
 void shuffle_image(){
+    unsigned char a_matrix [128][128];
+    unsigned char b_matrix [128][128];
+    unsigned char c_matrix [128][128];
+    unsigned char d_matrix [128][128];
+    // Declare integers to shuffle
+    cout<<"New order of quarters ? ";
+    int first, second, third, fourth;
+    cin>>first>>second>>third>>fourth;
+// Put quarters in separated matrices
+        for(int i = 0; i < 128;i++){
+            for(int j = 0; j < 128; j++){
+               a_matrix[i][j] = input_image_matrix[i][j];
+            }
+        }
+        for(int i =0; i < 128;i++){
+            for(int j = 128; j < SIZE; j++){
+                b_matrix[i][j-128] = input_image_matrix[i][j];
+            }
+        }
+        for(int i = 128; i < SIZE;i++){
+            for(int j = 0; j < 128; j++){
+                c_matrix[i-128][j] = input_image_matrix[i][j];
+            }
+        }
+        for(int i = 128; i < SIZE;i++){
+            for(int j = 128; j < SIZE; j++){
+               d_matrix[i-128][j-128] = input_image_matrix[i][j];
+            }
+        }
+/* SHUFFLING TIME */
+        for(int i = 0; i < 128;i++){
+            for(int j = 0; j < 128; j++){
+                if(first ==1){
+                    output_image_matrix[i][j] = a_matrix[i][j];
+                }
+               else if(first ==2){
+                    output_image_matrix[i][j] = b_matrix[i][j];
+               }
+               else if(first ==3){
+                    output_image_matrix[i][j] = c_matrix[i][j];
+               }
+               else if(first == 4) {
+                    output_image_matrix[i][j] = d_matrix[i][j];
+               }
+            }
+        }
+
+        for(int i =0; i < 128;i++){
+            for(int j = 128; j < SIZE; j++){
+                if(second == 1){
+                    output_image_matrix[i][j] = a_matrix[i][j-128];
+                }
+               else if(second == 2){
+                    output_image_matrix[i][j] = b_matrix[i][j-128];
+               }
+               else if(second == 3){
+                    output_image_matrix[i][j] = c_matrix[i][j-128];
+               }
+               else if(second == 4) {
+                    output_image_matrix[i][j] = d_matrix[i][j-128];
+               }
+            }
+        }
+
+        for(int i = 128; i < SIZE;i++){
+            for(int j = 0; j < 128; j++){
+                if(third == 1){
+                    output_image_matrix[i][j] = a_matrix[i-128][j];
+                }
+               else if(third == 2){
+                    output_image_matrix[i][j] = b_matrix[i-128][j];
+               }
+               else if(third == 3){
+                    output_image_matrix[i][j] = c_matrix[i-128][j];
+               }
+               else if(third == 4) {
+                    output_image_matrix[i][j] = d_matrix[i-128][j];
+               }
+            }
+        }
+
+        for(int i = 128; i < SIZE;i++){
+            for(int j = 128; j < SIZE; j++){
+               if(fourth == 1){
+                    output_image_matrix[i][j] = a_matrix[i-128][j-128];
+                }
+               else if(fourth == 2){
+                    output_image_matrix[i][j] = b_matrix[i-128][j-128];
+               }
+               else if(fourth == 3){
+                    output_image_matrix[i][j] = c_matrix[i-128][j-128];
+               }
+               else if(fourth == 4) {
+                    output_image_matrix[i][j] = d_matrix[i-128][j-128];
+               }
+            }
+        }
 
 }
 
