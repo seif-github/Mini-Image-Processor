@@ -558,6 +558,36 @@ void skew_right(){
 
 /* f- Skew Image Up-----------------------------------------------------*/
 void skew_up(){
+    // Declare a number to determine the angle
+    // Declare a number to determine the angle
+    cout<<"Please enter degree to skew right: ";
+    double angle;
+    cin >> angle;
+//    angle = 90 - angle;
+    angle = ((angle*22)/(180*7));
+    double expand = 256 / tan(angle);
+    double copy_expand = expand;
+    double shrink_rat = round((256+expand)/256);
+    double step = expand / SIZE;
+    unsigned char expanded_matrix[SIZE+(int)expand][SIZE];
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < SIZE+(int)expand; j++){
+            output_image_matrix[i][j] = 255 ;
+            expanded_matrix[j][i] = 255;
+        }
+    }
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < SIZE; j++){
+             expanded_matrix[j+(int)expand][i]  = input_image_matrix[j][i] ;
+        }
+        expand -= step;
+    }
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < SIZE+(int)copy_expand; j++){
+            output_image_matrix[j/(int)shrink_rat][i] = expanded_matrix[j][i] ;
+
+        }
+    }
 
 
 }
