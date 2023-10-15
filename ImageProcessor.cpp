@@ -14,6 +14,7 @@
 
 using namespace std;
 
+
 //Declare two matrices for input image and another for output one
 unsigned char input_image_matrix [SIZE][SIZE];
 unsigned char output_image_matrix [SIZE][SIZE];
@@ -524,9 +525,36 @@ void crop_image(){
 
 /* e- Skew Image Right--------------------------------------------------*/
 void skew_right(){
+    // Declare a number to determine the angle
+    cout<<"Please enter degree to skew right: ";
+    double angle;
+    cin >> angle;
+    angle = 90 - angle;
+    angle = ((angle*22)/(180*7));
+    double expand = 256 / tan(angle);
+    double copy_expand = expand;
+    double shrink_rat = round((256+expand)/256);
+    double step = expand / SIZE;
+    unsigned char expanded_matrix[SIZE][SIZE+(int)expand];
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < SIZE+(int)expand; j++){
+            output_image_matrix[i][j] = 255 ;
+            expanded_matrix[i][j] = 255;
+        }
+    }
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < SIZE; j++){
+             expanded_matrix[i][j+(int)expand]  = input_image_matrix[i][j] ;
+        }
+        expand -= step;
+    }
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < SIZE+(int)copy_expand; j++){
+            output_image_matrix[i][j/(int)shrink_rat] = expanded_matrix[i][j] ;
+        }
+    }
 
 }
-
 
 /* f- Skew Image Up-----------------------------------------------------*/
 void skew_up(){
