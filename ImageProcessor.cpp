@@ -504,7 +504,22 @@ void blur_image(){
 
 /* d- Crop Image--------------------------------------------------------*/
 void crop_image(){
-
+    // Declare integers to determine
+    cout<<"Please enter x y l w:  \n";
+    int x , y , l , w  ;
+    cin>> x >> y >> l >> w ;
+    // Make the output matrix white
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < SIZE; j++){
+            output_image_matrix[i][j] = 255 ;
+        }
+    }
+    // Crop the image by copy the determined dimensions
+    for(int i = x ; i < l+x ;i++){
+        for(int j = y ; j < w+y ; j++){
+            output_image_matrix[i][j] = input_image_matrix[i][j];
+        }
+    }
 }
 
 /* e- Skew Image Right--------------------------------------------------*/
