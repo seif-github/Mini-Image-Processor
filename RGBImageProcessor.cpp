@@ -1,6 +1,6 @@
 // FCAI - OOP Programming - 2023 - Assignment 1
 // Program Name: RGBImageProcessor.cpp
-// Last Modification Date: 9 Oct 2023
+// Last Modification Date: 16 Oct 2023
 // Author1 and ID and Email: Seif Gamal Abdelmonem | 20220162 | sseif9709@gmail.com
 // Author2 and ID and Email: Samuel Moamen Samy | 20220168 | sasamelo99@gmail.com
 // Author3 and ID and Email: Zeyad Hussein Adel | 20220439 | zeyad.hussein.404@gmail.com
