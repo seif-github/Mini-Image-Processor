@@ -1,5 +1,5 @@
-// FCAI � OOP Programming � 2023 - Assignment 1
-// Program Name: ImageProcessor.cpp
+// FCAI - OOP Programming - 2023 - Assignment 1
+// Program Name: GreyScaleImageProcessor.cpp
 // Last Modification Date: 9 Oct 2023
 // Author1 and ID and Email: Seif Gamal Abdelmonem | 20220162 | sseif9709@gmail.com
 // Author2 and ID and Email: Samuel Moamen Samy | 20220168 | sasamelo99@gmail.com
