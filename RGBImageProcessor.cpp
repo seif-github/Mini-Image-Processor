@@ -1,5 +1,5 @@
 // FCAI - OOP Programming - 2023 - Assignment 1
-// Program Name: GreyScaleImageProcessor.cpp
+// Program Name: RGBImageProcessor.cpp
 // Last Modification Date: 9 Oct 2023
 // Author1 and ID and Email: Seif Gamal Abdelmonem | 20220162 | sseif9709@gmail.com
 // Author2 and ID and Email: Samuel Moamen Samy | 20220168 | sasamelo99@gmail.com
@@ -16,8 +16,8 @@ using namespace std;
 
 
 //Declare two matrices for input image and another for output one
-unsigned char input_image_matrix [SIZE][SIZE];
-unsigned char output_image_matrix [SIZE][SIZE];
+unsigned char input_image_matrix [SIZE][SIZE][RGB];
+unsigned char output_image_matrix [SIZE][SIZE][RGB];
 
 
 /*====================Load and save image functions====================*/
@@ -31,7 +31,7 @@ void load_image () {
 
    // Add to it .bmp extension and load image to the image matrix
    strcat (input_image_name, ".bmp");
-   readGSBMP(input_image_name, input_image_matrix);
+   readRGBBMP(input_image_name, input_image_matrix);
 }
 
 void save_image () {
@@ -43,38 +43,31 @@ void save_image () {
 
    // Add to it .bmp extension and load image
    strcat (output_image_name, ".bmp");
-   writeGSBMP(output_image_name, output_image_matrix);
+   writeRGBBMP(output_image_name, output_image_matrix);
 }
 /*======================================================================*/
 
 /*===========================FILTERS====================================*/
 /* 1- Black & White Filter----------------------------------------------*/
 void black_and_white() {
-    // Initialize variable will contain the number of total pixels in the image
-    int n_total_pixels = 0;
+    int avg_k = 0; // Declare an integer to calculate the average of RGB pixels
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-          n_total_pixels += input_image_matrix[i][j];
-        }
-    }
-    // Calculating the average of pixels by using average rule
-    int avg = n_total_pixels / (256*256);
-    // Making each pixel either black or white depends on average
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-          if(input_image_matrix [i][j] > avg){
-            input_image_matrix [i][j] = 255;
-          }
-          else{
-            input_image_matrix [i][j] = 0;
-          }
-
-        }
-    }
-    // put the result in the output_image_matrix
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-            output_image_matrix [i][j] = input_image_matrix [i][j];
+            for (int k = 0; k < RGB; k++){
+                avg_k += (int)input_image_matrix[i][j][k];
+            }
+            avg_k /= 3;
+            if(avg_k > 127){
+                for (int k = 0; k < RGB; k++){
+                    output_image_matrix[i][j][k] = 255;
+                }
+            }
+            else{
+                for (int k = 0; k < RGB; k++){
+                    output_image_matrix[i][j][k] = 0;
+                }
+            }
+            avg_k = 0;
         }
     }
 }
@@ -82,16 +75,18 @@ void black_and_white() {
 /* 2- Invert Filter-----------------------------------------------------*/
 void invert_image(){
     for (int i = 0; i < SIZE; i++) {
-      for (int j = 0; j< SIZE; j++) {
-        output_image_matrix[i][j] = input_image_matrix[i][j] == 0 ? 255 : -(input_image_matrix[i][j]);
-      }
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[i][j][k] = 255 - input_image_matrix[i][j][k];
+            }
+        }
     }
 }
 
 /* 3- Merge Filter------------------------------------------------------*/
 void merge_image(){
     //Declare a matrix and array of characters for the second image
-    unsigned char input_image_matrix_2 [SIZE][SIZE];
+    unsigned char input_image_matrix_2 [SIZE][SIZE][RGB];
     char input_image_name_2 [100];
 
     // Get gray scale image file name
@@ -99,12 +94,14 @@ void merge_image(){
     cin >> input_image_name_2;
     // Add to it .bmp extension and load image to the image matrix
     strcat (input_image_name_2, ".bmp");
-    readGSBMP (input_image_name_2, input_image_matrix_2);
+    readRGBBMP (input_image_name_2, input_image_matrix_2);
 
-    for(int i = 0 ; i < SIZE; i++){
+    for (int i = 0 ; i < SIZE; i++){
         for (int j = 0 ; j < SIZE; j++ ){
-        //Make every pixel in output matrix equals to the average of two input matrices.
-            output_image_matrix [i][j] = (input_image_matrix [i][j] + input_image_matrix_2 [i][j]) / 2 ;
+            for (int k = 0; k < RGB; k++){
+                //Make every pixel in output matrix equals to the average of two input matrices.
+                output_image_matrix [i][j][k] = (input_image_matrix [i][j][k] + input_image_matrix_2 [i][j][k]) / 2 ;
+            }  
         }
     }
 }
@@ -120,14 +117,18 @@ void flip_image(){
     if(c == 'h'){
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
-            output_image_matrix [i][j] = input_image_matrix [SIZE - i - 1][j];
+                for (int k = 0; k < RGB; k++) {
+                    output_image_matrix [i][j][k] = input_image_matrix [SIZE - i - 1][j][k];
+                }
             }
         }
     }
     else{ // c == 'v'
         for (int i = 0; i < SIZE; i++) {
           for (int j = 0; j < SIZE; j++) {
-            output_image_matrix [i][j] = input_image_matrix [i][SIZE - j - 1];
+            for (int k = 0; k < RGB; k++) {
+                output_image_matrix [i][j][k] = input_image_matrix [i][SIZE - j - 1][k];
+            }
           }
         }
     }
@@ -135,33 +136,46 @@ void flip_image(){
 
 /* 5- Darken and Lighten Image------------------------------------------*/
 void darken_and_lighten(){
-    // Initialize variable will contain the number of total pixels in the image
-    int n_total_pixels = 0;
+    // Declare black and white images matrices
+    unsigned char black [SIZE][SIZE][RGB];
+    unsigned char white [SIZE][SIZE][RGB];
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-          n_total_pixels += input_image_matrix [i][j];
+            for (int k = 0; k < RGB; k++) {
+                black[i][j][k] = 0;
+            }
         }
     }
-    // Calculating the average of pixels by using average rule
-    int avg = n_total_pixels / (256*256);
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; k++) {
+                white[i][j][k] = 255;
+            }
+        }
+    }
     //Declare a character to choose
     cout << "Do you want to (d)arken or (l)ighten? ";
     char c;
     cin >> c;
     if(c == 'd'){
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                // Adding 50% of the pixel value
-                output_image_matrix [i][j] = input_image_matrix [i][j] - input_image_matrix [i][j] / 2;
+        for (int i = 0 ; i < SIZE; i++){
+            for (int j = 0 ; j < SIZE; j++ ){
+                for (int k = 0; k < RGB; k++){
+                    // Make every pixel in output matrix equals to the average of two input matrices.
+                    // Merge input image with black image to make it darken 50%
+                    output_image_matrix [i][j][k] = (input_image_matrix [i][j][k] + black [i][j][k]) / 2 ;
+                }  
             }
         }
     }
     else{ // c == 'l'
-        for (int i = 0; i < SIZE; i++) {
-            for (int j = 0; j < SIZE; j++) {
-                // Decreasing 50% of the pixel value by adding the value of the average minus the value of 50% of the pixel
-                // taking care of it is white should be still white
-                output_image_matrix [i][j] = input_image_matrix [i][j] + (avg - (input_image_matrix [i][j] / 2)) >= 255 ? 255 : input_image_matrix [i][j] + (avg - (input_image_matrix [i][j] / 2));
+        for (int i = 0 ; i < SIZE; i++){
+            for (int j = 0 ; j < SIZE; j++ ){
+                for (int k = 0; k < RGB; k++){
+                    // Make every pixel in output matrix equals to the average of two input matrices.
+                    // Merge input image with white image to make it lighten 50%
+                    output_image_matrix [i][j][k] = (input_image_matrix [i][j][k] + white [i][j][k]) / 2 ;
+                }  
             }
         }
     }
@@ -177,28 +191,36 @@ void rotate_image(){
     if (degree == 90){
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                output_image_matrix [i][j] = input_image_matrix [255-j][i];
+                for (int k = 0; k < RGB; k++) {
+                    output_image_matrix [i][j][k] = input_image_matrix [255-j][i][k];
+                }
             }
         }
     }
     else if(degree == 180){
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                output_image_matrix [i][j] = input_image_matrix [255-i][j];
+                for (int k = 0; k < RGB; k++) {
+                    output_image_matrix [i][j][k] = input_image_matrix [255-i][j][k];
+                }
             }
         }
     }
     else if (degree == 270){
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                output_image_matrix [i][j] = input_image_matrix [j][255-i];
+                for (int k = 0; k < RGB; k++) {
+                    output_image_matrix [i][j][k] = input_image_matrix [j][255-i][k];
+                }
             }
         }
     }
     else{ // degree == 360
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                output_image_matrix [i][j] = input_image_matrix [i][j];
+                for (int k = 0; k < RGB; k++) {
+                    output_image_matrix [i][j][k] = input_image_matrix [i][j][k];
+                }
             }
         }
     }
@@ -207,30 +229,30 @@ void rotate_image(){
 /* 7- Detect Image Edges------------------------------------------------*/
 void detect_edges(){
 // Black and White filter code
-    // Initialize variable will contain the number of total pixels in the image
-    int n_total_pixels = 0;
+    unsigned char BW [SIZE][SIZE]; // Declare a matrix to save to black and white image in it
+    int avg_k = 0; // Declare an integer to calculate the average of RGB pixels
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-          n_total_pixels += input_image_matrix[i][j];
-        }
-    }
-    // Calculating the average of pixels by using average rule
-    int avg = n_total_pixels / (256*256);
-    // Making each pixel either black or white depends on average
-    for (int i = 0; i < SIZE; i++) {
-        for (int j = 0; j < SIZE; j++) {
-          if(input_image_matrix [i][j] > avg)
-            input_image_matrix [i][j] = 255;
-          else
-            input_image_matrix [i][j] = 0;
+            for (int k = 0; k < RGB; k++){
+                avg_k += (int)input_image_matrix[i][j][k];
+            }
+            avg_k /= 3;
+            if(avg_k > 127){
+                BW[i][j] = 255;
+            }
+            else{
+                BW[i][j] = 0;
+            }
+            avg_k = 0;
         }
     }
 // Detect edges part code
     for (int i = 0; i < SIZE; i++) {
         for (int j = 0; j < SIZE; j++) {
-            // Compare the difference between center pixel and its surroundings. If there's huge difference, it will make an edge
-            output_image_matrix[i][j] =  (input_image_matrix[i-1][j-1] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i+1][j+1] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i][j+1] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i+1][j] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i-1][j] - input_image_matrix[i][j]) == 255 || (input_image_matrix[i][j-1] - input_image_matrix[i][j]) == 255 ? 0 : 255;
-
+            for (int k = 0; k < RGB; k++){
+                // Compare the difference between center pixel and its surroundings. If there's huge difference, it will make an edge
+                output_image_matrix[i][j][k] =  (BW[i-1][j-1] - BW[i][j]) == 255 || (BW[i+1][j+1] - BW[i][j]) == 255 || (BW[i][j+1] - BW[i][j]) == 255 || (BW[i+1][j] - BW[i][j]) == 255 || (BW[i-1][j] - BW[i][j]) == 255 || (BW[i][j-1] - BW[i][j]) == 255 ? 0 : 255;
+            }
         }
     }
 
@@ -239,7 +261,7 @@ void detect_edges(){
 /* 8- Enlarge Image-----------------------------------------------------*/
 void enlarge_image(){
     // Declare new matrix to shift the image
-    unsigned char shift_matrix [SIZE][SIZE];
+    unsigned char shift_matrix [SIZE][SIZE][RGB];
     // Declare an integer to choose
     cout<<"Which quarter to enlarge 1, 2, 3 or 4? ";
     int quarter;
@@ -249,7 +271,9 @@ void enlarge_image(){
         // Enlarging image by repeating pixel four times
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                output_image_matrix[i][j] = input_image_matrix[i/2][j/2];
+                for (int k = 0; k < RGB; k++){
+                 output_image_matrix[i][j][k] = input_image_matrix[i/2][j/2][k];
+                }
             }
         }
     }
@@ -257,13 +281,16 @@ void enlarge_image(){
         // Shifting the quarter to be instead of first quarter
         for(int i =0; i < SIZE;i++){
             for(int j = 128; j < SIZE; j++){
-                shift_matrix[i][j-128] = input_image_matrix[i][j];
-
+                for (int k = 0; k < RGB; k++){
+                    shift_matrix[i][j-128][k] = input_image_matrix[i][j][k];
+                }
             }
         }
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                output_image_matrix[i][j] = shift_matrix[i/2][j/2];
+                for (int k = 0; k < RGB; k++){
+                    output_image_matrix[i][j][k] = shift_matrix[i/2][j/2][k];
+                }
             }
         }
 
@@ -272,26 +299,32 @@ void enlarge_image(){
     else if (quarter == 3){
          for(int i = 128; i < SIZE;i++){
             for(int j = 0; j < 128; j++){
-                    shift_matrix[i-128][j] = input_image_matrix[i][j];
-
+                for (int k = 0; k < RGB; k++){
+                    shift_matrix[i-128][j][k] = input_image_matrix[i][j][k];
+                }
             }
         }
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                output_image_matrix[i][j] = shift_matrix[i/2][j/2];
+                for (int k = 0; k < RGB; k++){
+                    output_image_matrix[i][j][k] = shift_matrix[i/2][j/2][k];
+                }
             }
         }
     }
     else{ // quarter == 4
          for(int i = 128; i < SIZE;i++){
             for(int j = 128; j < SIZE; j++){
-                shift_matrix[i-128][j-128] = input_image_matrix[i][j];
-
+                for (int k = 0; k < RGB; k++){
+                    shift_matrix[i-128][j-128][k] = input_image_matrix[i][j][k];
+                }
             }
         }
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                output_image_matrix[i][j] = shift_matrix[i/2][j/2];
+                for (int k = 0; k < RGB; k++){
+                    output_image_matrix[i][j][k] = shift_matrix[i/2][j/2][k];
+                }
             }
         }
     }
@@ -305,7 +338,9 @@ void shrink_image(){
     // Make the whole image white
     for(int i = 0; i < SIZE;i++){
         for(int j = 0; j < SIZE; j++){
-            output_image_matrix[i][j] = 255;
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[i][j][k] = 255;
+            }
         }
     }
 
@@ -313,7 +348,9 @@ void shrink_image(){
         // Shrink image by taking every 4 pixels as one
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                output_image_matrix[i/2][j/2] = input_image_matrix[i][j] ;
+                for (int k = 0; k < RGB; k++){
+                    output_image_matrix[i/2][j/2][k] = input_image_matrix[i][j][k];
+                }
 
             }
         }
@@ -322,8 +359,9 @@ void shrink_image(){
         // Shrink image by taking every 9 pixels as one
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                output_image_matrix[i/3][j/3] = input_image_matrix[i][j] ;
-
+                for (int k = 0; k < RGB; k++){
+                output_image_matrix[i/3][j/3][k] = input_image_matrix[i][j][k];
+                }
             }
         }
     }
@@ -331,8 +369,9 @@ void shrink_image(){
         // Shrink image by taking every 16 pixels as one
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                output_image_matrix[i/4][j/4] = input_image_matrix[i][j] ;
-
+                for (int k = 0; k < RGB; k++){
+                    output_image_matrix[i/4][j/4][k] = input_image_matrix[i][j][k] ;
+                }
             }
         }
     }
@@ -348,48 +387,55 @@ void mirror_image(){
     if(c == 'l'){
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < 128; j++){
-                input_image_matrix [i][255 - j] = input_image_matrix [i][j];
+                for (int k = 0; k < RGB; k++){
+                    input_image_matrix [i][255 - j][k] = input_image_matrix [i][j][k];
+                }
             }
         }
     }
     else if (c == 'r'){
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                input_image_matrix [i][j] = input_image_matrix [i][255 - j];
+                for (int k = 0; k < RGB; k++){
+                    input_image_matrix [i][j][k] = input_image_matrix [i][255 - j][k];
+                }
             }
         }
     }
     else if (c == 'u'){
         for(int i = 0; i < 128;i++){
             for(int j = 0; j < SIZE; j++){
-                input_image_matrix [255 - i][j] = input_image_matrix [i][j];
+                for (int k = 0; k < RGB; k++){
+                    input_image_matrix [255 - i][j][k] = input_image_matrix [i][j][k];
+                }
             }
         }
     }
     else { // c == 'd'
         for(int i = 0; i < SIZE;i++){
             for(int j = 0; j < SIZE; j++){
-                input_image_matrix [i][j] = input_image_matrix [255 - i][j];
-
+                for (int k = 0; k < RGB; k++){
+                    input_image_matrix [i][j][k] = input_image_matrix [255 - i][j][k];
+                }
             }
         }
     }
     // Put final result in the output matrix
     for(int i = 0; i < SIZE;i++){
         for(int j = 0; j < SIZE; j++){
-            output_image_matrix [i][j] = input_image_matrix [i][j] ;
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix [i][j][k] = input_image_matrix [i][j][k];
+            }
         }
     }
-
-
 }
 /* b- Shuffle Image-----------------------------------------------------*/
 void shuffle_image(){
     // Declare matrices to put the four quarters in it
-    unsigned char first_quarter_matrix [128][128];
-    unsigned char second_quarter_matrix [128][128];
-    unsigned char third_quarter_matrix [128][128];
-    unsigned char fourth_quarter_matrix [128][128];
+    unsigned char first_quarter_matrix [128][128][RGB];
+    unsigned char second_quarter_matrix [128][128][RGB];
+    unsigned char third_quarter_matrix [128][128][RGB];
+    unsigned char fourth_quarter_matrix [128][128][RGB];
     // Declare integers to shuffle
     cout<<"New order of quarters ? ";
     int first, second, third, fourth;
@@ -397,94 +443,109 @@ void shuffle_image(){
     // Put the four quarters in separated matrices
     for(int i = 0; i < 128;i++){
         for(int j = 0; j < 128; j++){
-           first_quarter_matrix[i][j] = input_image_matrix[i][j];
+            for (int k = 0; k < RGB; k++){
+                first_quarter_matrix[i][j][k] = input_image_matrix[i][j][k];
+            }
         }
     }
     for(int i =0; i < 128;i++){
         for(int j = 128; j < SIZE; j++){
-            second_quarter_matrix[i][j-128] = input_image_matrix[i][j];
+            for (int k = 0; k < RGB; k++){
+                second_quarter_matrix[i][j-128][k] = input_image_matrix[i][j][k];
+            }
         }
     }
     for(int i = 128; i < SIZE;i++){
         for(int j = 0; j < 128; j++){
-            third_quarter_matrix[i-128][j] = input_image_matrix[i][j];
+            for (int k = 0; k < RGB; k++){
+                third_quarter_matrix[i-128][j][k] = input_image_matrix[i][j][k];
+            }
         }
     }
     for(int i = 128; i < SIZE;i++){
         for(int j = 128; j < SIZE; j++){
-           fourth_quarter_matrix[i-128][j-128] = input_image_matrix[i][j];
+            for (int k = 0; k < RGB; k++){
+                fourth_quarter_matrix[i-128][j-128][k] = input_image_matrix[i][j][k];
+            }
         }
     }
 /* SHUFFLING TIME */
     // Put the choosen quarter in the first quarter
     for(int i = 0; i < 128;i++){
         for(int j = 0; j < 128; j++){
-            if(first ==1){
-                output_image_matrix[i][j] = first_quarter_matrix[i][j];
-            }
-            else if(first ==2){
-                output_image_matrix[i][j] = second_quarter_matrix[i][j];
-            }
-            else if(first ==3){
-                output_image_matrix[i][j] = third_quarter_matrix[i][j];
-           }
-            else { // first == 4
-                output_image_matrix[i][j] = fourth_quarter_matrix[i][j];
+            for (int k = 0; k < RGB; k++){
+                if(first ==1){
+                    output_image_matrix[i][j][k] = first_quarter_matrix[i][j][k];
+                }
+                else if(first ==2){
+                    output_image_matrix[i][j][k] = second_quarter_matrix[i][j][k];
+                }
+                else if(first ==3){
+                    output_image_matrix[i][j][k] = third_quarter_matrix[i][j][k];
+                }
+                else { // first == 4
+                    output_image_matrix[i][j][k] = fourth_quarter_matrix[i][j][k];
+                }
             }
         }
     }
     // Put the choosen quarter in the second quarter
     for(int i =0; i < 128;i++){
         for(int j = 128; j < SIZE; j++){
-            if(second == 1){
-                output_image_matrix[i][j] = first_quarter_matrix[i][j-128];
-            }
-            else if(second == 2){
-                output_image_matrix[i][j] = second_quarter_matrix[i][j-128];
-            }
-            else if(second == 3){
-                output_image_matrix[i][j] = third_quarter_matrix[i][j-128];
-            }
-            else { //second == 4
-                output_image_matrix[i][j] = fourth_quarter_matrix[i][j-128];
+            for (int k = 0; k < RGB; k++){
+                if(second == 1){
+                    output_image_matrix[i][j][k] = first_quarter_matrix[i][j-128][k];
+                }
+                else if(second == 2){
+                    output_image_matrix[i][j][k] = second_quarter_matrix[i][j-128][k];
+                }
+                else if(second == 3){
+                    output_image_matrix[i][j][k] = third_quarter_matrix[i][j-128][k];
+                }
+                else { //second == 4
+                    output_image_matrix[i][j][k] = fourth_quarter_matrix[i][j-128][k];
+                }
             }
         }
     }
     // Put the choosen quarter in the third quarter
     for(int i = 128; i < SIZE;i++){
         for(int j = 0; j < 128; j++){
-            if(third == 1){
-                output_image_matrix[i][j] = first_quarter_matrix[i-128][j];
-            }
-            else if(third == 2){
-                output_image_matrix[i][j] = second_quarter_matrix[i-128][j];
-            }
-            else if(third == 3){
-                output_image_matrix[i][j] = third_quarter_matrix[i-128][j];
-            }
-            else if(third == 4) {
-                output_image_matrix[i][j] = fourth_quarter_matrix[i-128][j];
+            for (int k = 0; k < RGB; k++){
+                if(third == 1){
+                    output_image_matrix[i][j][k] = first_quarter_matrix[i-128][j][k];
+                }
+                else if(third == 2){
+                    output_image_matrix[i][j][k] = second_quarter_matrix[i-128][j][k];
+                }
+                else if(third == 3){
+                    output_image_matrix[i][j][k] = third_quarter_matrix[i-128][j][k];
+                }
+                else if(third == 4) {
+                    output_image_matrix[i][j][k] = fourth_quarter_matrix[i-128][j][k];
+                }
             }
         }
     }
     // Put the choosen quarter in the fourth quarter
     for(int i = 128; i < SIZE;i++){
         for(int j = 128; j < SIZE; j++){
-            if(fourth == 1){
-                output_image_matrix[i][j] = first_quarter_matrix[i-128][j-128];
-            }
-            else if(fourth == 2){
-                output_image_matrix[i][j] = second_quarter_matrix[i-128][j-128];
-            }
-            else if(fourth == 3){
-                output_image_matrix[i][j] = third_quarter_matrix[i-128][j-128];
-            }
-            else if(fourth == 4) {
-                output_image_matrix[i][j] = fourth_quarter_matrix[i-128][j-128];
+            for (int k = 0; k < RGB; k++){
+                if(fourth == 1){
+                    output_image_matrix[i][j][k] = first_quarter_matrix[i-128][j-128][k];
+                }
+                else if(fourth == 2){
+                    output_image_matrix[i][j][k] = second_quarter_matrix[i-128][j-128][k];
+                }
+                else if(fourth == 3){
+                    output_image_matrix[i][j][k] = third_quarter_matrix[i-128][j-128][k];
+                }
+                else if(fourth == 4) {
+                    output_image_matrix[i][j][k] = fourth_quarter_matrix[i-128][j-128][k];
+                }
             }
         }
     }
-
 }
 
 /* c- Blur Image--------------------------------------------------------*/
@@ -493,17 +554,17 @@ void blur_image(){
     int avg = 0;
     for(int i = 2; i < 254;i++){
         for(int j = 2; j < 254; j++){
-            avg += input_image_matrix[i][j];
-            for(int k = 1; k < 4; k++){
-                avg += input_image_matrix[i-k][j-k] + input_image_matrix[i-k][j] + input_image_matrix[i-k][j+k] + input_image_matrix[i][j-k]+ input_image_matrix[i][j+k] + input_image_matrix[i+k][j-k] + input_image_matrix[i+k][j] + input_image_matrix[i+k][j+k];
+            for (int k = 0; k < RGB; k++){
+                avg += input_image_matrix[i][j][k];
+                for(int l = 1; l < 4; l++){
+                    avg += input_image_matrix[i-l][j-l][k] + input_image_matrix[i-l][j][k] + input_image_matrix[i-l][j+l][k] + input_image_matrix[i][j-l][k]+ input_image_matrix[i][j+l][k] + input_image_matrix[i+l][j-l][k] + input_image_matrix[i+l][j][k] + input_image_matrix[i+l][j+l][k];
+                }
+                output_image_matrix[i][j][k] = avg/25;
+                avg = 0;
             }
-            output_image_matrix[i][j] = avg/25;
-            avg = 0;
         }
     }
-
 }
-
 
 /* d- Crop Image--------------------------------------------------------*/
 void crop_image(){
@@ -514,13 +575,17 @@ void crop_image(){
     // Make the output matrix white
     for(int i = 0; i < SIZE ;i++){
         for(int j = 0; j < SIZE; j++){
-            output_image_matrix[i][j] = 255 ;
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[i][j][k] = 255;
+            }
         }
     }
     // Crop the image by copy the determined dimensions
     for(int i = x ; i < l+x ;i++){
         for(int j = y ; j < w+y ; j++){
-            output_image_matrix[i][j] = input_image_matrix[i][j];
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[i][j][k] = input_image_matrix[i][j][k];
+            }
         }
     }
 }
@@ -537,28 +602,33 @@ void skew_right(){
     double copy_expand = expand; // Take a copy to use it in shrink for loop
     double shrink_ratio = round((256+expand)/256); // Calculate the ratio fit the shrink on 256*256
     double step = expand / SIZE; // Calculate the value of every step to skew the photo
-    unsigned char expanded_matrix[SIZE][SIZE+(int)expand]; // Declare a matrix to fit the expand after skewing
+    unsigned char expanded_matrix[SIZE][SIZE+(int)expand][RGB]; // Declare a matrix to fit the expand after skewing
     // Make the output matrix and the expanded matrix white
     for(int i = 0; i < SIZE ;i++){
         for(int j = 0; j < SIZE+(int)expand; j++){
-            output_image_matrix[i][j] = 255 ;
-            expanded_matrix[i][j] = 255;
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[i][j][k] = 255 ;
+                expanded_matrix[i][j][k] = 255;
+            }
         }
     }
     // Skewing the image by start from distance (expand) and subtracting by value (step) until finish the skewed image
     for(int i = 0; i < SIZE ;i++){
         for(int j = 0; j < SIZE; j++){
-             expanded_matrix[i][j+(int)expand]  = input_image_matrix[i][j] ;
+            for (int k = 0; k < RGB; k++){
+                expanded_matrix[i][j+(int)expand][k] = input_image_matrix[i][j][k] ;
+            }
         }
         expand -= step;
     }
     // Shrink image by taking every value of (shrink_ratio) pixels as one pixel
     for(int i = 0; i < SIZE ;i++){
         for(int j = 0; j < SIZE+(int)copy_expand; j++){
-            output_image_matrix[i][j/(int)shrink_ratio] = expanded_matrix[i][j] ;
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[i][j/(int)shrink_ratio][k] = expanded_matrix[i][j][k];
+            }
         }
     }
-
 }
 
 /* f- Skew Image Up-----------------------------------------------------*/
@@ -573,26 +643,31 @@ void skew_up(){
     double copy_expand = expand; // Take a copy to use it in shrink for loop
     double shrink_ratio = round((256+expand)/256); // Calculate the ratio fit the shrink on 256*256
     double step = expand / SIZE; // Calculate the value of every step to skew the photo
-    unsigned char expanded_matrix[SIZE+(int)expand][SIZE]; // Declare a matrix to fit the expand after skewing
+    unsigned char expanded_matrix[SIZE+(int)expand][SIZE][RGB]; // Declare a matrix to fit the expand after skewing
     // Make the output matrix and the expanded matrix white
     for(int i = 0; i < SIZE ;i++){
         for(int j = 0; j < SIZE+(int)expand; j++){
-            output_image_matrix[i][j] = 255 ;
-            expanded_matrix[j][i] = 255;
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[i][j][k] = 255 ;
+                expanded_matrix[j][i][k] = 255;
+            }
         }
     }
     // Skewing the image by start from distance (expand) and subtracting by value (step) until finish the skewed image
     for(int i = 0; i < SIZE ;i++){
         for(int j = 0; j < SIZE; j++){
-             expanded_matrix[j+(int)expand][i]  = input_image_matrix[j][i] ;
+            for (int k = 0; k < RGB; k++){
+                expanded_matrix[j+(int)expand][i][k] = input_image_matrix[j][i][k];
+            }
         }
         expand -= step;
     }
     // Shrink image by taking every value of (shrink_ratio) pixels as one pixel
     for(int i = 0; i < SIZE ;i++){
         for(int j = 0; j < SIZE+(int)copy_expand; j++){
-            output_image_matrix[j/(int)shrink_ratio][i] = expanded_matrix[j][i] ;
-
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[j/(int)shrink_ratio][i][k] = expanded_matrix[j][i][k];
+            }
         }
     }
 }
@@ -619,8 +694,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -633,8 +710,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -647,8 +726,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -661,8 +742,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -675,8 +758,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -689,8 +774,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -703,8 +790,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -717,8 +806,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -731,8 +822,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -745,8 +838,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -759,8 +854,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -773,8 +870,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -787,8 +886,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
@@ -801,12 +902,13 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
-
             skew_right();
 
         }
@@ -815,8 +917,10 @@ int main(){
             if(n_attempts > 0){
                 for (int i = 0; i < SIZE; i++){
                     for (int j = 0; j < SIZE; j++){
-                        input_image_matrix[i][j] = output_image_matrix[i][j];
-                        output_image_matrix[i][j] = 0;
+                        for (int k = 0; k < RGB; k++){
+                            input_image_matrix[i][j][k] = output_image_matrix[i][j][k];
+                            output_image_matrix[i][j][k] = 0;
+                        }
                     }
                 }
             }
