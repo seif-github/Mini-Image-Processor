@@ -136,7 +136,7 @@ void flip_image(){
 
 /* 5- Darken and Lighten Image------------------------------------------*/
 void darken_and_lighten(){
-     // Declare black and white images matrices
+    // Declare black and white images matrices
     unsigned char black [SIZE][SIZE][RGB];
     unsigned char white [SIZE][SIZE][RGB];
     for (int i = 0; i < SIZE; i++) {
@@ -327,7 +327,6 @@ void enlarge_image(){
             }
         }
     }
-
 }
 /* 9- Shrink Image------------------------------------------------------*/
 void shrink_image(){
@@ -506,8 +505,7 @@ void shuffle_image(){
             }
         }
     }
-
-// Put the choosen quarter in the third quarter
+    // Put the choosen quarter in the third quarter
     for(int i = 128; i < SIZE;i++){
         for(int j = 0; j < 128; j++){
             for (int k = 0; k < RGB; k++){
@@ -545,7 +543,6 @@ void shuffle_image(){
             }
         }
     }
-
 }
 
 /* c- Blur Image--------------------------------------------------------*/
@@ -629,7 +626,6 @@ void skew_right(){
             }
         }
     }
-
 }
 
 /* f- Skew Image Up-----------------------------------------------------*/
@@ -671,7 +667,6 @@ void skew_up(){
             }
         }
     }
-
 }
 
 /*======================================================================*/
