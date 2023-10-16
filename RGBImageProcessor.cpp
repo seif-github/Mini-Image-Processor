@@ -98,7 +98,6 @@ void merge_image(){
             }
         }
     }
-
 }
 
 
@@ -136,8 +135,7 @@ void darken_and_lighten(){
 
 /* 6- Rotate Image------------------------------------------------------*/
 void rotate_image(){
-
-     // Declare an integer to choose
+    // Declare an integer to choose
     cout << "Rotate (90), (180), (270) or (360) degrees? ";
     int degree;
     cin >> degree;
@@ -178,7 +176,6 @@ void rotate_image(){
             }
         }
     }
-
 }
 
 /* 7- Detect Image Edges------------------------------------------------*/
@@ -219,7 +216,6 @@ void enlarge_image(){
 }
 /* 9- Shrink Image------------------------------------------------------*/
 void shrink_image(){
-
     // Declare string to choose
     cout<<"Shrink to (1/2), (1/3) or (1/4)? ";
     string value ;
@@ -232,7 +228,6 @@ void shrink_image(){
             }
         }
     }
-
     if(value == "1/2"){
         // Shrink image by taking every 4 pixels as one
         for(int i = 0; i < SIZE;i++){
@@ -324,8 +319,7 @@ void shuffle_image(){
 
 /* c- Blur Image--------------------------------------------------------*/
 void blur_image(){
-
-        // Declare an integer to calculate the average of a pixel and the surrounding 24 pixel and make it one pixel
+    // Declare an integer to calculate the average of a pixel and the surrounding 24 pixel and make it one pixel
     int avg = 0;
     for(int i = 2; i < 254;i++){
         for(int j = 2; j < 254; j++){
@@ -339,7 +333,6 @@ void blur_image(){
             }
         }
     }
-
 }
 
 /* d- Crop Image--------------------------------------------------------*/
@@ -373,8 +366,7 @@ void skew_right(){
 
 /* f- Skew Image Up-----------------------------------------------------*/
 void skew_up(){
-
-       // Declare a number to determine the angle
+    // Declare a number to determine the angle
     cout<<"Please enter degree to skew up: ";
     double angle;
     cin >> angle;
