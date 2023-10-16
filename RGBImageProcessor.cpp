@@ -74,7 +74,13 @@ void black_and_white() {
 
 /* 2- Invert Filter-----------------------------------------------------*/
 void invert_image(){
-
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[i][j][k] = 255 - input_image_matrix[i][j][k];
+            }
+        }
+    }
 }
 
 /* 3- Merge Filter------------------------------------------------------*/
@@ -130,7 +136,49 @@ void flip_image(){
 
 /* 5- Darken and Lighten Image------------------------------------------*/
 void darken_and_lighten(){
-
+     // Declare black and white images matrices
+    unsigned char black [SIZE][SIZE][RGB];
+    unsigned char white [SIZE][SIZE][RGB];
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; k++) {
+                black[i][j][k] = 0;
+            }
+        }
+    }
+    for (int i = 0; i < SIZE; i++) {
+        for (int j = 0; j < SIZE; j++) {
+            for (int k = 0; k < RGB; k++) {
+                white[i][j][k] = 255;
+            }
+        }
+    }
+    //Declare a character to choose
+    cout << "Do you want to (d)arken or (l)ighten? ";
+    char c;
+    cin >> c;
+    if(c == 'd'){
+        for (int i = 0 ; i < SIZE; i++){
+            for (int j = 0 ; j < SIZE; j++ ){
+                for (int k = 0; k < RGB; k++){
+                    // Make every pixel in output matrix equals to the average of two input matrices.
+                    // Merge input image with black image to make it darken 50%
+                    output_image_matrix [i][j][k] = (input_image_matrix [i][j][k] + black [i][j][k]) / 2 ;
+                }
+            }
+        }
+    }
+    else{ // c == 'l'
+        for (int i = 0 ; i < SIZE; i++){
+            for (int j = 0 ; j < SIZE; j++ ){
+                for (int k = 0; k < RGB; k++){
+                    // Make every pixel in output matrix equals to the average of two input matrices.
+                    // Merge input image with white image to make it lighten 50%
+                    output_image_matrix [i][j][k] = (input_image_matrix [i][j][k] + white [i][j][k]) / 2 ;
+                }
+            }
+        }
+    }
 }
 
 /* 6- Rotate Image------------------------------------------------------*/
@@ -212,6 +260,73 @@ void detect_edges(){
 
 /* 8- Enlarge Image-----------------------------------------------------*/
 void enlarge_image(){
+    // Declare new matrix to shift the image
+    unsigned char shift_matrix [SIZE][SIZE][RGB];
+    // Declare an integer to choose
+    cout<<"Which quarter to enlarge 1, 2, 3 or 4? ";
+    int quarter;
+    cin>>quarter;
+
+    if(quarter == 1){
+        // Enlarging image by repeating pixel four times
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                for (int k = 0; k < RGB; k++){
+                 output_image_matrix[i][j][k] = input_image_matrix[i/2][j/2][k];
+                }
+            }
+        }
+    }
+    else if (quarter == 2){
+        // Shifting the quarter to be instead of first quarter
+        for(int i =0; i < SIZE;i++){
+            for(int j = 128; j < SIZE; j++){
+                for (int k = 0; k < RGB; k++){
+                    shift_matrix[i][j-128][k] = input_image_matrix[i][j][k];
+                }
+            }
+        }
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                for (int k = 0; k < RGB; k++){
+                    output_image_matrix[i][j][k] = shift_matrix[i/2][j/2][k];
+                }
+            }
+        }
+    }
+    else if (quarter == 3){
+         for(int i = 128; i < SIZE;i++){
+            for(int j = 0; j < 128; j++){
+                for (int k = 0; k < RGB; k++){
+                    shift_matrix[i-128][j][k] = input_image_matrix[i][j][k];
+                }
+            }
+        }
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                for (int k = 0; k < RGB; k++){
+                    output_image_matrix[i][j][k] = shift_matrix[i/2][j/2][k];
+                }
+            }
+        }
+    }
+
+    else{ // quarter == 4
+         for(int i = 128; i < SIZE;i++){
+            for(int j = 128; j < SIZE; j++){
+                for (int k = 0; k < RGB; k++){
+                    shift_matrix[i-128][j-128][k] = input_image_matrix[i][j][k];
+                }
+            }
+        }
+        for(int i = 0; i < SIZE;i++){
+            for(int j = 0; j < SIZE; j++){
+                for (int k = 0; k < RGB; k++){
+                    output_image_matrix[i][j][k] = shift_matrix[i/2][j/2][k];
+                }
+            }
+        }
+    }
 
 }
 /* 9- Shrink Image------------------------------------------------------*/
@@ -314,6 +429,122 @@ void mirror_image(){
 }
 /* b- Shuffle Image-----------------------------------------------------*/
 void shuffle_image(){
+    // Declare matrices to put the four quarters in it
+    unsigned char first_quarter_matrix [128][128][RGB];
+    unsigned char second_quarter_matrix [128][128][RGB];
+    unsigned char third_quarter_matrix [128][128][RGB];
+    unsigned char fourth_quarter_matrix [128][128][RGB];
+    // Declare integers to shuffle
+    cout<<"New order of quarters ? ";
+    int first, second, third, fourth;
+    cin>>first>>second>>third>>fourth;
+    // Put the four quarters in separated matrices
+    for(int i = 0; i < 128;i++){
+        for(int j = 0; j < 128; j++){
+            for (int k = 0; k < RGB; k++){
+                first_quarter_matrix[i][j][k] = input_image_matrix[i][j][k];
+            }
+        }
+    }
+    for(int i =0; i < 128;i++){
+        for(int j = 128; j < SIZE; j++){
+            for (int k = 0; k < RGB; k++){
+                second_quarter_matrix[i][j-128][k] = input_image_matrix[i][j][k];
+            }
+        }
+    }
+    for(int i = 128; i < SIZE;i++){
+        for(int j = 0; j < 128; j++){
+            for (int k = 0; k < RGB; k++){
+                third_quarter_matrix[i-128][j][k] = input_image_matrix[i][j][k];
+            }
+        }
+    }
+    for(int i = 128; i < SIZE;i++){
+        for(int j = 128; j < SIZE; j++){
+            for (int k = 0; k < RGB; k++){
+                fourth_quarter_matrix[i-128][j-128][k] = input_image_matrix[i][j][k];
+            }
+        }
+    }
+/* SHUFFLING TIME */
+    // Put the choosen quarter in the first quarter
+    for(int i = 0; i < 128;i++){
+        for(int j = 0; j < 128; j++){
+            for (int k = 0; k < RGB; k++){
+                if(first ==1){
+                    output_image_matrix[i][j][k] = first_quarter_matrix[i][j][k];
+                }
+                else if(first ==2){
+                    output_image_matrix[i][j][k] = second_quarter_matrix[i][j][k];
+                }
+                else if(first ==3){
+                    output_image_matrix[i][j][k] = third_quarter_matrix[i][j][k];
+                }
+                else { // first == 4
+                    output_image_matrix[i][j][k] = fourth_quarter_matrix[i][j][k];
+                }
+            }
+        }
+    }
+    // Put the choosen quarter in the second quarter
+    for(int i =0; i < 128;i++){
+        for(int j = 128; j < SIZE; j++){
+            for (int k = 0; k < RGB; k++){
+                if(second == 1){
+                    output_image_matrix[i][j][k] = first_quarter_matrix[i][j-128][k];
+                }
+                else if(second == 2){
+                    output_image_matrix[i][j][k] = second_quarter_matrix[i][j-128][k];
+                }
+                else if(second == 3){
+                    output_image_matrix[i][j][k] = third_quarter_matrix[i][j-128][k];
+                }
+                else { //second == 4
+                    output_image_matrix[i][j][k] = fourth_quarter_matrix[i][j-128][k];
+                }
+            }
+        }
+    }
+
+// Put the choosen quarter in the third quarter
+    for(int i = 128; i < SIZE;i++){
+        for(int j = 0; j < 128; j++){
+            for (int k = 0; k < RGB; k++){
+                if(third == 1){
+                    output_image_matrix[i][j][k] = first_quarter_matrix[i-128][j][k];
+                }
+                else if(third == 2){
+                    output_image_matrix[i][j][k] = second_quarter_matrix[i-128][j][k];
+                }
+                else if(third == 3){
+                    output_image_matrix[i][j][k] = third_quarter_matrix[i-128][j][k];
+                }
+                else if(third == 4) {
+                    output_image_matrix[i][j][k] = fourth_quarter_matrix[i-128][j][k];
+                }
+            }
+        }
+    }
+    // Put the choosen quarter in the fourth quarter
+    for(int i = 128; i < SIZE;i++){
+        for(int j = 128; j < SIZE; j++){
+            for (int k = 0; k < RGB; k++){
+                if(fourth == 1){
+                    output_image_matrix[i][j][k] = first_quarter_matrix[i-128][j-128][k];
+                }
+                else if(fourth == 2){
+                    output_image_matrix[i][j][k] = second_quarter_matrix[i-128][j-128][k];
+                }
+                else if(fourth == 3){
+                    output_image_matrix[i][j][k] = third_quarter_matrix[i-128][j-128][k];
+                }
+                else if(fourth == 4) {
+                    output_image_matrix[i][j][k] = fourth_quarter_matrix[i-128][j-128][k];
+                }
+            }
+        }
+    }
 
 }
 
@@ -361,6 +592,43 @@ void crop_image(){
 
 /* e- Skew Image Right--------------------------------------------------*/
 void skew_right(){
+    // Declare a number to determine the angle
+    cout<<"Please enter degree to skew right: ";
+    double angle;
+    cin >> angle;
+    angle = 90 - angle; // To work on the right angle
+    angle = (angle*22)/(180*7); // Convert angle from degree to radian
+    double expand = 256 / tan(angle); // Distance calculated from the tangent ratio; tan(angle) = opposite / adjacent
+    double copy_expand = expand; // Take a copy to use it in shrink for loop
+    double shrink_ratio = round((256+expand)/256); // Calculate the ratio fit the shrink on 256*256
+    double step = expand / SIZE; // Calculate the value of every step to skew the photo
+    unsigned char expanded_matrix[SIZE][SIZE+(int)expand][RGB]; // Declare a matrix to fit the expand after skewing
+    // Make the output matrix and the expanded matrix white
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < SIZE+(int)expand; j++){
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[i][j][k] = 255 ;
+                expanded_matrix[i][j][k] = 255;
+            }
+        }
+    }
+    // Skewing the image by start from distance (expand) and subtracting by value (step) until finish the skewed image
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < SIZE; j++){
+            for (int k = 0; k < RGB; k++){
+                expanded_matrix[i][j+(int)expand][k] = input_image_matrix[i][j][k] ;
+            }
+        }
+        expand -= step;
+    }
+    // Shrink image by taking every value of (shrink_ratio) pixels as one pixel
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < SIZE+(int)copy_expand; j++){
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[i][j/(int)shrink_ratio][k] = expanded_matrix[i][j][k];
+            }
+        }
+    }
 
 }
 
