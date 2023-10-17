@@ -595,37 +595,40 @@ void skew_right(){
     cin >> angle;
     angle = 90 - angle; // To work on the right angle
     angle = (angle*22)/(180*7); // Convert angle from degree to radian
-    double expand = 256 / tan(angle); // Distance calculated from the tangent ratio; tan(angle) = opposite / adjacent
-    double copy_expand = expand; // Take a copy to use it in shrink for loop
-    double shrink_ratio = round((256+expand)/256); // Calculate the ratio fit the shrink on 256*256
-    double step = expand / SIZE; // Calculate the value of every step to skew the photo
-    unsigned char expanded_matrix[SIZE][SIZE+(int)expand][RGB]; // Declare a matrix to fit the expand after skewing
-    // Make the output matrix and the expanded matrix white
-    for(int i = 0; i < SIZE ;i++){
-        for(int j = 0; j < SIZE+(int)expand; j++){
-            for (int k = 0; k < RGB; k++){
-                output_image_matrix[i][j][k] = 255 ;
-                expanded_matrix[i][j][k] = 255;
-            }
-        }
-    }
-    // Skewing the image by start from distance (expand) and subtracting by value (step) until finish the skewed image
+    int shrinked_base = SIZE / (1 + 1/tan(angle));
+    /* Calculate new base by crossing
+    256 + l -->    256  (l is the expand distnace after 256(width) which equals = 256(length) / tan(angle))
+      256   --> shrinked_base
+    */
+    double distance = SIZE - shrinked_base; // Calculate the distance using the difference between the whole size and the new base
+    double step = distance / SIZE; // Calculate the value of every step to skew the photo
+    unsigned char shrinked_matrix[SIZE][SIZE][RGB]; // Declare a matrix to save shrinked input image matrix
+    // Make the output matrix and the shrinked matrix white
     for(int i = 0; i < SIZE ;i++){
         for(int j = 0; j < SIZE; j++){
             for (int k = 0; k < RGB; k++){
-                expanded_matrix[i][j+(int)expand][k] = input_image_matrix[i][j][k] ;
+                output_image_matrix[i][j][k] = 255;
+                shrinked_matrix[i][j][k] = 255;
             }
         }
-        expand -= step;
     }
-    // Shrink image by taking every value of (shrink_ratio) pixels as one pixel
+    // Shrink image by multipling rows with the ratio of base over 256
     for(int i = 0; i < SIZE ;i++){
-        for(int j = 0; j < SIZE+(int)copy_expand; j++){
+        for(int j = 0; j < SIZE; j++){
             for (int k = 0; k < RGB; k++){
-                output_image_matrix[i][j/(int)shrink_ratio][k] = expanded_matrix[i][j][k];
+                shrinked_matrix[i][(j*shrinked_base)/SIZE][k] = input_image_matrix[i][j][k] ;
             }
         }
     }
+    // Skewing the image by adding rows and the distance calculated and reduce the value of distance by the step value
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < shrinked_base; j++){
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[i][j+(int)distance][k] = shrinked_matrix[i][j][k];
+            }
+        }
+        distance -= step;
+    }   
 }
 
 /* f- Skew Image Up-----------------------------------------------------*/
@@ -636,37 +639,40 @@ void skew_up(){
     cin >> angle;
     angle = 90 - angle; // To work on the right angle
     angle = (angle*22)/(180*7); // Convert angle from degree to radian
-    double expand = 256 / tan(angle); // Distance calculated from the tangent ratio; tan(angle) = opposite / adjacent
-    double copy_expand = expand; // Take a copy to use it in shrink for loop
-    double shrink_ratio = round((256+expand)/256); // Calculate the ratio fit the shrink on 256*256
-    double step = expand / SIZE; // Calculate the value of every step to skew the photo
-    unsigned char expanded_matrix[SIZE+(int)expand][SIZE][RGB]; // Declare a matrix to fit the expand after skewing
-    // Make the output matrix and the expanded matrix white
-    for(int i = 0; i < SIZE ;i++){
-        for(int j = 0; j < SIZE+(int)expand; j++){
-            for (int k = 0; k < RGB; k++){
-                output_image_matrix[i][j][k] = 255 ;
-                expanded_matrix[j][i][k] = 255;
-            }
-        }
-    }
-    // Skewing the image by start from distance (expand) and subtracting by value (step) until finish the skewed image
+    int shrinked_base = SIZE / (1 + 1/tan(angle));
+    /* Calculate new base by crossing
+    256 + l -->    256  (l is the expand distnace after 256(width) which equals = 256(length) / tan(angle))
+      256   --> shrinked_base
+    */
+    double distance = SIZE - shrinked_base; // Calculate the distance using the difference between the whole size and the new base
+    double step = distance / SIZE; // Calculate the value of every step to skew the photo
+    unsigned char shrinked_matrix[SIZE][SIZE][RGB]; // Declare a matrix to save shrinked input image matrix
+    // Make the output matrix and the shrinked matrix white
     for(int i = 0; i < SIZE ;i++){
         for(int j = 0; j < SIZE; j++){
             for (int k = 0; k < RGB; k++){
-                expanded_matrix[j+(int)expand][i][k] = input_image_matrix[j][i][k];
+                output_image_matrix[i][j][k] = 255;
+                shrinked_matrix[i][j][k] = 255;
             }
         }
-        expand -= step;
     }
-    // Shrink image by taking every value of (shrink_ratio) pixels as one pixel
+    // Shrink image by multipling rows with the ratio of base over 256
     for(int i = 0; i < SIZE ;i++){
-        for(int j = 0; j < SIZE+(int)copy_expand; j++){
+        for(int j = 0; j < SIZE; j++){
             for (int k = 0; k < RGB; k++){
-                output_image_matrix[j/(int)shrink_ratio][i][k] = expanded_matrix[j][i][k];
+                shrinked_matrix[(j*shrinked_base)/SIZE][i][k] = input_image_matrix[j][i][k];
             }
         }
     }
+    // Skewing the image by adding rows and the distance calculated and reduce the value of distance by the step value
+    for(int i = 0; i < SIZE ;i++){
+        for(int j = 0; j < shrinked_base; j++){
+            for (int k = 0; k < RGB; k++){
+                output_image_matrix[j+(int)distance][i][k] = shrinked_matrix[j][i][k];
+            }
+        }
+        distance -= step;
+    }   
 }
 
 /*======================================================================*/
