@@ -6,7 +6,7 @@ Download git and install it if you didn't.
 
 1) Open D:\ directory or any directory and rightclick at any empty place then choose "Git Bash Here"
 2) For first time using git type : git config --global user.name (put name) -> git config --global user.email (put email)
-3) Type : git clone [https://github.com/seif-github/GreyScaleImageProcessor.git](https://github.com/seif-github/Mini-Image-Processor.git)
+3) Type : git clone https://github.com/seif-github/GreyScaleImageProcessor.git
 4) Close git bash
 5) you will git a file with name "ImageProcessor"
 6) Double click on it and rightclick on "ImageProcessor.cpp" and choose "open with" and choose "codeblocks" or any IDE
